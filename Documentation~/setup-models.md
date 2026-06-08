@@ -11,6 +11,22 @@ Total disk usage: ~220 MB.
 
 ---
 
+## 🚀 Easy way — auto-installer (recommended)
+
+In Unity, open **`Tools → Simple TTS → Download Models...`**
+
+The window shows each model and its install status. Click **Download** next to
+each, or **Download all missing** to install both at once. Models are downloaded
+from the package's GitHub Releases and extracted into `StreamingAssets/`
+automatically.
+
+If for any reason this fails (network down, releases not yet published), the
+manual install steps below still work.
+
+---
+
+## 🛠 Manual install (fallback)
+
 ## 🇬🇧 English voice — Piper Amy via Sherpa-onnx
 
 ### 1. Download

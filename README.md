@@ -32,15 +32,14 @@ To pin a specific version:
 https://github.com/HVannierM/Simple-TTS-Unity.git#v0.1.0
 ```
 
-## Required models (manual download)
+## Required models (auto-download)
 
-Two neural voice models (~220 MB total) are NOT bundled — download them once:
+Two neural voice models (~220 MB total) are NOT bundled in the package — they
+download on demand via an Editor menu:
 
-➡️ **See [Documentation~/setup-models.md](Documentation~/setup-models.md) for step-by-step instructions.**
+**Unity → `Tools → Simple TTS → Download Models...`** → click **Download all missing**.
 
-In short:
-- Piper Amy → `Assets/StreamingAssets/models/vits-piper-en_US-amy-medium/`
-- VOICEVOX dict + Akagi Mitama → `Assets/StreamingAssets/voicevox_core/`
+Manual install fallback if needed: [Documentation~/setup-models.md](Documentation~/setup-models.md).
 
 ## Quick start
 
