@@ -1,4 +1,4 @@
-# RPPG TTS
+# Simple-TTS-Unity
 
 Plug-and-play neural Text-to-Speech for Unity. Offline, cross-platform.
 
