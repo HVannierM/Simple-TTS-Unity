@@ -1,0 +1,27 @@
+{
+  "name": "com.rppg.tts",
+  "version": "0.1.0",
+  "displayName": "RPPG TTS",
+  "description": "Plug-and-play neural Text-to-Speech for Unity. Ships with English (Piper Amy via Sherpa-onnx) and Japanese (Akagi Mitama via VOICEVOX). 100% offline, no internet calls. Cross-platform: Windows, macOS, Linux, Android, iOS. Architecture pluggable via ITTSProvider — easy to add more voices/languages.",
+  "unity": "2022.3",
+  "author": {
+    "name": "RPPG / Hugo"
+  },
+  "keywords": [
+    "tts",
+    "text-to-speech",
+    "voicevox",
+    "piper",
+    "sherpa-onnx",
+    "offline",
+    "japanese",
+    "english"
+  ],
+  "samples": [
+    {
+      "displayName": "TTS Test Scene",
+      "description": "Standalone scene to test both English and Japanese voices via a dropdown and a button.",
+      "path": "Samples~/TTSTestScene"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+    "name": "RPPG.TTS.Runtime",
+    "rootNamespace": "RPPG.TTS",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "sherpa-onnx.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
