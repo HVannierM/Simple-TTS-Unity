@@ -1,105 +1,100 @@
-# TTS Test Scene — manual setup
+# TTS Test Scene — ready-to-use sample
 
-This sample provides `TTSStandaloneTester.cs` to test the TTS pipeline through a simple UI.
-**Build the scene yourself in ~5 minutes** by following the steps below.
+This sample provides a pre-configured Unity scene to test the TTS pipeline.
 
-## Prerequisites
+## Quick start
 
-1. Models downloaded — see [Documentation~/setup-models.md](../../Documentation~/setup-models.md) at the package root.
-2. (For Japanese) A Unicode-capable font asset, e.g. **Noto Sans JP** as a TMP Font Asset. Without it, JP characters render as squares. See [Font setup](#-font-setup-japanese) at the bottom.
+### 1. Prerequisites
 
-## Build the scene (5 min)
+- Voice models downloaded — see [Documentation~/setup-models.md](../../Documentation~/setup-models.md)
+- (For Japanese) Noto Sans JP TMP font asset — see [Japanese font setup](#-japanese-font-setup) below
 
-### 1. Create the scene
+### 2. Open the scene
 
-`File → New Scene → Empty 3D Scene` → save as `Assets/Scenes/TTSTestScene.unity`.
+After importing this sample, the scene is at:
+```
+Assets/Samples/Simple TTS Unity/0.1.0/TTS Test Scene/TTSTestScene.unity
+```
 
-### 2. AudioSource
+Double-click to open.
 
-Create empty GameObject **`AudioSource`** → Add Component **Audio Source** → **uncheck Play On Awake**.
+### 3. Reassign the font (if you set up Noto Sans JP)
 
-### 3. Provider GameObjects
+The scene was saved using **Noto Sans JP SDF** as the TMP font. Since the font
+file isn't bundled in the package, you'll see missing-font warnings on the
+`TextInput`, `LanguageDropdown`, `SpeakButton` and `StatusLabel` TMP components.
 
-Create one GameObject **per engine** you want, with the matching component:
+Two options:
+- **A.** Set up Noto Sans JP (see below), then in the inspector reassign your
+  own `NotoSansJP-Regular SDF` to each TMP component.
+- **B.** Reassign to `LiberationSans SDF` (default TMP) — English will work, but
+  Japanese characters will render as squares.
 
-- GameObject **`SherpaTTS`** → `SherpaTTSProvider`. Configure:
-  - `Model Folder Name` = `vits-piper-en_US-amy-medium`
-  - leave the rest at defaults
+### 4. Play
 
-- GameObject **`VoicevoxTTS`** → `VoicevoxTTSProvider`. Configure:
-  - `Specific Vvm Files` → Size 1, Element 0 = `24.vvm` (Akagi Mitama)
-  - `Default Style Id` = `122` (Akagi Mitama Normal)
-  - `Warmup On Init` = checked
+Press Play. Console should show:
+```
+[SherpaTTS] Init OK
+[Voicevox] Init complète, moteur prêt
+[TTSTester] Ready. Type some text and click Speak.
+```
 
-### 4. Dispatcher
+- Type a phrase in the input
+- Switch the dropdown (English / Japanese)
+- Click **Speak**
 
-Create GameObject **`MultiLangTTS`** → `MultiLanguageTTSProvider`. Configure:
-- `Mappings`:
-  - Element 0: `Language Code` = `en`, `Provider Behaviour` = drag `SherpaTTS`
-  - Element 1: `Language Code` = `ja`, `Provider Behaviour` = drag `VoicevoxTTS`
+## 🎨 Japanese font setup
 
-### 5. UI
+To render Japanese text correctly:
 
-`GameObject → UI → Canvas`. Inside the Canvas add:
-- `UI → Input Field - TextMeshPro` → rename **`TextInput`**
-- `UI → Dropdown - TextMeshPro` → rename **`LanguageDropdown`**
-  - Set options: 0 = `English`, 1 = `Japanese`
-- `UI → Button - TextMeshPro` → rename **`SpeakButton`**
-- `UI → Text - TextMeshPro` → rename **`StatusLabel`**
+1. Download Noto Sans JP from https://fonts.google.com/noto/specimen/Noto+Sans+JP
+2. Drop `NotoSansJP-Regular.ttf` into `Assets/Fonts/`
+3. **Window → TextMeshPro → Font Asset Creator**
+4. Source Font File = NotoSansJP-Regular
+5. **Atlas Population Mode = Dynamic** (important)
+6. Click **Generate Font Atlas**, then **Save**
+7. (Optional) **Edit → Project Settings → TextMeshPro → Settings**:
+   - Set `Default Font Asset` = your `NotoSansJP-Regular SDF`
+   - Add it to `Fallback Font Assets`
 
-### 6. Tester
-
-Create GameObject **`Tester`** → add **`TTSStandaloneTester`** (this sample script). Inspector:
-- `Tts Behaviour` → drag **`MultiLangTTS`**
-- `Audio Source` → drag the AudioSource GameObject
-- `Text Input` → drag `TextInput`
-- `Language Dropdown` → drag `LanguageDropdown`
-- `Speak Button` → drag `SpeakButton`
-- `Status Label` → drag `StatusLabel`
-
-### 7. Test
-
-Press Play. The console should show `[Sherpa] Init OK` and `[Voicevox] Init OK`.
-Type a phrase, switch the dropdown, click Speak.
-
-## 🎨 Font setup (Japanese)
-
-To render Japanese text correctly in the InputField:
-
-1. Download **Noto Sans JP** (https://fonts.google.com/noto/specimen/Noto+Sans+JP)
-2. Drag the `.ttf` into `Assets/Fonts/`
-3. `Window → TextMeshPro → Font Asset Creator`
-4. **Source Font File** = drag the Noto Sans JP TTF
-5. **Atlas Population Mode** = `Dynamic` (rasterize glyphs on the fly — easiest)
-6. Click `Generate Font Atlas`, then `Save` next to the TTF
-7. (Optional) `Edit → Project Settings → TextMeshPro → Settings`:
-   - `Default Font Asset` = the Noto Sans JP SDF
-   - Add it to `Fallback Font Assets` list
-
-Now any TMP_Text/TMP_InputField in the scene renders Japanese correctly.
-
-## Going further
-
-For minimal code usage from your own scripts:
+## Going further — use TTS in your own code
 
 ```csharp
 using RPPG.TTS;
+using UnityEngine;
 
-public class MyScript : MonoBehaviour
+public class MyDemo : MonoBehaviour
 {
-    public MonoBehaviour ttsBehaviour;
+    public MonoBehaviour ttsBehaviour;   // drag your provider in inspector
+    public AudioSource audioSource;
 
     async void Start()
     {
         var tts = ttsBehaviour as ITTSProvider;
-        AudioClip clip = await tts.Synthesize("Hello!", "en");
-        GetComponent<AudioSource>().PlayOneShot(clip);
+
+        AudioClip en = await tts.Synthesize("Hello!", "en");
+        audioSource.PlayOneShot(en);
+
+        AudioClip jp = await tts.Synthesize("やっほー", "ja");
+        audioSource.PlayOneShot(jp);
     }
 }
 ```
 
-Or with the static singleton (drop a `TTSManager` component anywhere):
+Or with the static singleton (drop a `TTSManager` component in the scene):
 
 ```csharp
-var clip = await TTSManager.Instance.Synthesize("やっほー", "ja");
+var clip = await TTSManager.Instance.Synthesize("Bonjour", "en");
 ```
+
+## Need to rebuild the scene from scratch?
+
+If the included scene gets broken or you want to start over, the scene was
+built with:
+
+- `AudioSource` GameObject (Audio Source, PlayOnAwake unchecked)
+- `SherpaTTS` GameObject (SherpaTTSProvider, `Model Folder Name = vits-piper-en_US-amy-medium`)
+- `VoicevoxTTS` GameObject (VoicevoxTTSProvider, `Specific Vvm Files = ["24.vvm"]`, `Default Style Id = 122`)
+- `MultiLangTTS` GameObject (MultiLanguageTTSProvider with `en → SherpaTTS`, `ja → VoicevoxTTS`)
+- `Canvas` with TMP_InputField, TMP_Dropdown, Button, TMP_Text
+- `Tester` GameObject (TTSStandaloneTester) with all references wired
