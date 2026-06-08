@@ -1,12 +1,16 @@
 {
   "name": "com.rppg.tts",
   "version": "0.1.0",
-  "displayName": "RPPG TTS",
+  "displayName": "Simple TTS Unity",
   "description": "Plug-and-play neural Text-to-Speech for Unity. Ships with English (Piper Amy via Sherpa-onnx) and Japanese (Akagi Mitama via VOICEVOX). 100% offline, no internet calls. Cross-platform: Windows, macOS, Linux, Android, iOS. Architecture pluggable via ITTSProvider — easy to add more voices/languages.",
   "unity": "2022.3",
   "author": {
-    "name": "RPPG / Hugo"
+    "name": "Hugo Vannier (HVannierM)",
+    "url": "https://github.com/HVannierM"
   },
+  "documentationUrl": "https://github.com/HVannierM/Simple-TTS-Unity",
+  "changelogUrl": "https://github.com/HVannierM/Simple-TTS-Unity/releases",
+  "licensesUrl": "https://github.com/HVannierM/Simple-TTS-Unity/blob/main/LICENSE.md",
   "keywords": [
     "tts",
     "text-to-speech",
