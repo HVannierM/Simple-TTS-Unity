@@ -87,7 +87,10 @@ namespace RPPG.TTS
                 Debug.Log("[Voicevox] Init en cours…");
 
                 var initOptions = InitializeOptions.Default();
-                if (OpenJtalk.New(dictPath, out var openJtalk) != ResultCode.RESULT_OK)
+                // Workaround binding VoicevoxCoreSharp 0.16.0 : la lib Rust attend une C-string
+                // null-terminée, mais le binding ne l'ajoute pas → lecture de garbage après la string.
+                string dictPathNullTerminated = dictPath + "\0";
+                if (OpenJtalk.New(dictPathNullTerminated, out var openJtalk) != ResultCode.RESULT_OK)
                 {
                     _initError = "OpenJtalk.New failed";
                     _initFailed = true;
@@ -133,7 +136,9 @@ namespace RPPG.TTS
                         ? vvmFileRelOrAbs
                         : Path.Combine(vvmsPath, Path.GetFileName(vvmFileRelOrAbs));
 
-                    if (VoiceModelFile.New(fullPath, out var voiceModel) != ResultCode.RESULT_OK)
+                    // Workaround binding VoicevoxCoreSharp 0.16.0 : null-terminate la path
+                    // (la lib Rust attend une C-string, le binding ne l'ajoute pas).
+                    if (VoiceModelFile.New(fullPath + "\0", out var voiceModel) != ResultCode.RESULT_OK)
                     {
                         Debug.LogWarning($"[Voicevox] Impossible de charger {fullPath}");
                         continue;
