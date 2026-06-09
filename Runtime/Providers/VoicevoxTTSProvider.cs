@@ -241,16 +241,21 @@ namespace RPPG.TTS
 
         /// <summary>
         /// Resolves the absolute path of the com.rppg.tts package on disk,
-        /// whether installed as embedded (Packages/com.rppg.tts) or via Git URL
-        /// / local tarball (Library/PackageCache/com.rppg.tts@&lt;hash&gt;).
+        /// whether installed via Git URL / local tarball
+        /// (Library/PackageCache/com.rppg.tts@&lt;hash&gt;) or embedded
+        /// (Packages/com.rppg.tts).
         /// </summary>
+        /// <remarks>
+        /// PackageCache is checked first because, when the package is installed
+        /// via Git URL, Unity exposes "Packages/com.rppg.tts" as a virtual mount
+        /// that <see cref="System.IO.Directory.Exists"/> resolves to <c>true</c>
+        /// but Windows' native <c>LoadLibrary</c> cannot open. Using the real
+        /// PackageCache path lets the OS load native DLLs correctly.
+        /// </remarks>
         static string ResolvePackageRoot()
         {
             string projectRoot = Path.GetDirectoryName(Application.dataPath);
             if (string.IsNullOrEmpty(projectRoot)) return null;
-
-            string embedded = Path.Combine(projectRoot, "Packages", "com.rppg.tts");
-            if (Directory.Exists(embedded)) return embedded;
 
             string cacheDir = Path.Combine(projectRoot, "Library", "PackageCache");
             if (Directory.Exists(cacheDir))
@@ -261,6 +266,10 @@ namespace RPPG.TTS
                 var fallback = Directory.GetDirectories(cacheDir, "com.rppg.tts*");
                 if (fallback != null && fallback.Length > 0) return fallback[0];
             }
+
+            string embedded = Path.Combine(projectRoot, "Packages", "com.rppg.tts");
+            if (Directory.Exists(embedded)) return embedded;
+
             return null;
         }
 
