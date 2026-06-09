@@ -54,6 +54,13 @@ by the user. They have their own licenses:
 - License: **Public domain (CC0)** for the Amy voice. Check the model card on
   HuggingFace for any updates.
 
+### Piper `fr_FR-siwis-medium`
+
+- Source: https://huggingface.co/rhasspy/piper-voices/tree/main/fr/fr_FR/siwis/medium
+- License: **CC0 1.0 Universal** (Public Domain Dedication).
+- Based on the SIWIS French Speech Synthesis Database from the Idiap Research
+  Institute (https://datashare.ed.ac.uk/handle/10283/2353).
+
 ### VOICEVOX voice models (`.vvm`)
 
 - Source: https://github.com/VOICEVOX/voicevox_core/releases

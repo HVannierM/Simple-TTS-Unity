@@ -2,8 +2,9 @@
 
 Plug-and-play neural Text-to-Speech for Unity. **Offline, cross-platform, no internet calls.**
 
-Ships with two ready-to-use voices:
+Ships with three ready-to-use voices:
 - 🇬🇧 **English** — Piper "Amy" (via [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx))
+- 🇫🇷 **French** — Piper "Siwis" (via sherpa-onnx)
 - 🇯🇵 **Japanese** — VOICEVOX "暁記ミタマ Akagi Mitama" (via [VoicevoxCoreSharp](https://github.com/yamachu/VoicevoxCoreSharp))
 
 The architecture is pluggable via the `ITTSProvider` interface — easy to add more voices or languages.
@@ -34,7 +35,7 @@ https://github.com/HVannierM/Simple-TTS-Unity.git#v0.1.0
 
 ## Required models (auto-download)
 
-Two neural voice models (~220 MB total) are NOT bundled in the package — they
+Three neural voice models (~280 MB total) are NOT bundled in the package — they
 download on demand via an Editor menu:
 
 **Unity → `Tools → Simple TTS → Download Models...`** → click **Download all missing**.

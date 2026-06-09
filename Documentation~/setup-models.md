@@ -5,9 +5,10 @@ You need to download them once per project.
 
 This guide shows you how to install:
 - **Piper Amy** (English voice) — ~60 MB
+- **Piper Siwis** (French voice) — ~60 MB
 - **VOICEVOX Akagi Mitama** (Japanese voice) — ~160 MB total
 
-Total disk usage: ~220 MB.
+Total disk usage: ~280 MB (all three).
 
 ---
 
@@ -63,6 +64,41 @@ The model is huge — don't commit it. Add to your `.gitignore`:
 /Assets/StreamingAssets/models/*
 !/Assets/StreamingAssets/models/.gitkeep
 ```
+
+---
+
+## 🇫🇷 French voice — Piper Siwis via Sherpa-onnx
+
+### 1. Download
+
+Go to: https://github.com/k2-fsa/sherpa-onnx/releases/tag/tts-models
+
+Ctrl+F → search **`vits-piper-fr_FR-siwis-medium`**. Download
+`vits-piper-fr_FR-siwis-medium.tar.bz2` (~60 MB).
+
+### 2. Extract
+
+Use 7-Zip or any tool that handles `.tar.bz2`. You should get a folder
+`vits-piper-fr_FR-siwis-medium/` containing:
+- `fr_FR-siwis-medium.onnx`
+- `tokens.txt`
+- `espeak-ng-data/` (folder)
+
+### 3. Place in your project
+
+```
+YourProject/Assets/StreamingAssets/models/vits-piper-fr_FR-siwis-medium/
+├── fr_FR-siwis-medium.onnx
+├── tokens.txt
+└── espeak-ng-data/
+```
+
+### 4. Wire it up in the scene
+
+To enable French dispatch, the scene needs a second SherpaTTSProvider configured
+for French and a mapping in `MultiLanguageTTSProvider`. See
+[Samples~/TTSTestScene/README.md](../Samples~/TTSTestScene/README.md) for the
+6-step recipe.
 
 ---
 
@@ -140,8 +176,12 @@ After install, in Unity Editor your `StreamingAssets/` should look like:
 ```
 Assets/StreamingAssets/
 ├── models/
-│   └── vits-piper-en_US-amy-medium/
-│       ├── en_US-amy-medium.onnx
+│   ├── vits-piper-en_US-amy-medium/
+│   │   ├── en_US-amy-medium.onnx
+│   │   ├── tokens.txt
+│   │   └── espeak-ng-data/
+│   └── vits-piper-fr_FR-siwis-medium/
+│       ├── fr_FR-siwis-medium.onnx
 │       ├── tokens.txt
 │       └── espeak-ng-data/
 └── voicevox_core/

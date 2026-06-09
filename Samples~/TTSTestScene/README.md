@@ -98,3 +98,27 @@ built with:
 - `MultiLangTTS` GameObject (MultiLanguageTTSProvider with `en → SherpaTTS`, `ja → VoicevoxTTS`)
 - `Canvas` with TMP_InputField, TMP_Dropdown, Button, TMP_Text
 - `Tester` GameObject (TTSStandaloneTester) with all references wired
+
+## Adding French to the scene
+
+The included scene only ships with EN and JP wired up. To add French (after
+downloading the Piper Siwis model via Tools → Simple TTS → Download Models):
+
+1. **Duplicate** the `SherpaTTS` GameObject (Ctrl+D) → rename **`SherpaTTS_FR`**
+2. On its `SherpaTTSProvider` component:
+   - `Model Folder Name` = `vits-piper-fr_FR-siwis-medium`
+   - `Restrict To Language` = ✅
+   - `Only Language Code` = `fr`
+3. On the `MultiLangTTS` GameObject (`MultiLanguageTTSProvider`), add a new
+   element to `Mappings`:
+   - `Language Code` = `fr`
+   - `Provider Behaviour` = drag `SherpaTTS_FR`
+4. (Optional) On the `LanguageDropdown`, add a third option `Français`. Then in
+   `TTSStandaloneTester.cs` the helper `CurrentLanguageCode` already returns
+   `"en"`, `"ja"` for indexes 0/1 — extend the switch to return `"fr"` for index 2.
+
+Now `await tts.Synthesize("Bonjour !", "fr")` plays the Siwis voice.
+
+The same pattern works for any other Piper voice (German, Spanish, Italian,
+Chinese...). See https://github.com/k2-fsa/sherpa-onnx/releases/tag/tts-models
+for the full list.

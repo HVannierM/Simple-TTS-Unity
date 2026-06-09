@@ -47,17 +47,26 @@ namespace RPPG.TTS.Samples
             }
         }
 
+        // Dropdown index convention: 0 = English, 1 = Japanese, 2 = French.
+        // If you add more options in the dropdown, extend this map accordingly.
         public string CurrentLanguageCode
         {
-            get => languageDropdown != null
-                ? (languageDropdown.value == 1 ? "ja" : "en")
-                : fallbackLanguageCode;
+            get
+            {
+                if (languageDropdown == null) return fallbackLanguageCode;
+                switch (languageDropdown.value)
+                {
+                    case 1: return "ja";
+                    case 2: return "fr";
+                    default: return "en";
+                }
+            }
             set
             {
-                if (languageDropdown != null)
-                    languageDropdown.value = (value == "ja" || value == "jp") ? 1 : 0;
-                else
-                    fallbackLanguageCode = value;
+                if (languageDropdown == null) { fallbackLanguageCode = value; return; }
+                if (value == "ja" || value == "jp") languageDropdown.value = 1;
+                else if (value == "fr") languageDropdown.value = 2;
+                else languageDropdown.value = 0;
             }
         }
 

@@ -206,14 +206,12 @@ namespace RPPG.TTS
 
         string ResolveOnnxRuntimePath()
         {
-            const string PackagePluginsRoot = "Packages/com.rppg.tts/Runtime/Plugins/Voicevox/runtimes";
-
 #if UNITY_EDITOR_WIN
-            return Path.GetFullPath($"{PackagePluginsRoot}/win-x64/native/voicevox_onnxruntime.dll");
+            return CombineEditorPluginPath("win-x64", "voicevox_onnxruntime.dll");
 #elif UNITY_STANDALONE_WIN
             return Path.Combine(Application.dataPath, "Plugins", "x86_64", "voicevox_onnxruntime.dll");
 #elif UNITY_EDITOR_OSX
-            return Path.GetFullPath($"{PackagePluginsRoot}/osx-arm64/native/libvoicevox_onnxruntime.dylib");
+            return CombineEditorPluginPath("osx-arm64", "libvoicevox_onnxruntime.dylib");
 #elif UNITY_STANDALONE_OSX
             return Path.Combine(Application.dataPath, "Plugins", "libvoicevox_onnxruntime.dylib");
 #elif UNITY_ANDROID
@@ -223,6 +221,42 @@ namespace RPPG.TTS
 #else
             return null;
 #endif
+        }
+
+        static string CombineEditorPluginPath(string runtime, string fileName)
+        {
+            string packageRoot = ResolvePackageRoot();
+            if (string.IsNullOrEmpty(packageRoot))
+            {
+                Debug.LogError("[Voicevox] Could not locate the com.rppg.tts package root on disk.");
+                return null;
+            }
+            return Path.Combine(packageRoot, "Runtime", "Plugins", "Voicevox", "runtimes", runtime, "native", fileName);
+        }
+
+        /// <summary>
+        /// Resolves the absolute path of the com.rppg.tts package on disk,
+        /// whether installed as embedded (Packages/com.rppg.tts) or via Git URL
+        /// / local tarball (Library/PackageCache/com.rppg.tts@&lt;hash&gt;).
+        /// </summary>
+        static string ResolvePackageRoot()
+        {
+            string projectRoot = Path.GetDirectoryName(Application.dataPath);
+            if (string.IsNullOrEmpty(projectRoot)) return null;
+
+            string embedded = Path.Combine(projectRoot, "Packages", "com.rppg.tts");
+            if (Directory.Exists(embedded)) return embedded;
+
+            string cacheDir = Path.Combine(projectRoot, "Library", "PackageCache");
+            if (Directory.Exists(cacheDir))
+            {
+                var matches = Directory.GetDirectories(cacheDir, "com.rppg.tts@*");
+                if (matches != null && matches.Length > 0) return matches[0];
+
+                var fallback = Directory.GetDirectories(cacheDir, "com.rppg.tts*");
+                if (fallback != null && fallback.Length > 0) return fallback[0];
+            }
+            return null;
         }
 
         public async Task<AudioClip> Synthesize(string text, string languageCode)

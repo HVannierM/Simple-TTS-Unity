@@ -35,6 +35,15 @@ namespace RPPG.TTS.Editor
             },
             new ModelEntry
             {
+                key = "piper-fr-siwis",
+                displayName = "🇫🇷 Piper Siwis (French)",
+                zipUrl = $"{MODELS_BASE_URL}/piper-fr-siwis-medium.zip",
+                approxSizeMb = 60,
+                installPath = "Assets/StreamingAssets/models/vits-piper-fr_FR-siwis-medium",
+                detectionFile = "fr_FR-siwis-medium.onnx",
+            },
+            new ModelEntry
+            {
                 key = "voicevox-akagi",
                 displayName = "🇯🇵 VOICEVOX Akagi Mitama (Japanese)",
                 zipUrl = $"{MODELS_BASE_URL}/voicevox-akagi-mitama.zip",
