@@ -1313,6 +1313,9 @@ MonoBehaviour:
     - m_Text: Japanese
       m_Image: {fileID: 0}
       m_Color: {r: 1, g: 1, b: 1, a: 1}
+    - m_Text: French
+      m_Image: {fileID: 0}
+      m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1502,7 +1505,7 @@ GameObject:
   - component: {fileID: 1386347621}
   - component: {fileID: 1386347622}
   m_Layer: 0
-  m_Name: SherpaTTS
+  m_Name: SherpaTTS-EN
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1796,6 +1799,8 @@ MonoBehaviour:
     providerBehaviour: {fileID: 1386347622}
   - languageCode: ja
     providerBehaviour: {fileID: 1390176414}
+  - languageCode: fr
+    providerBehaviour: {fileID: 1604570896}
   fallbackProviderBehaviour: {fileID: 1386347622}
   verboseLogs: 1
 --- !u!4 &1499289361
@@ -1980,7 +1985,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1563453963}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ba3b52e78ad25a4aaf02ae42223e3f0, type: 3}
+  m_Script: {fileID: 11500000, guid: a28d08693099df74eacbb532bbbe26f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ttsBehaviour: {fileID: 1499289360}
@@ -2127,6 +2132,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1581005328}
   m_CullTransparentMesh: 1
+--- !u!1 &1604570895
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1604570897}
+  - component: {fileID: 1604570896}
+  m_Layer: 0
+  m_Name: SherpaTTS-FR
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1604570896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604570895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 093ac84103fe0464da32da3c489bffcb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modelFolderName: vits-piper-fr_FR-siwis-medium
+  modelFileName: fr_FR-siwis-medium.onnx
+  tokensFileName: tokens.txt
+  dataDirName: espeak-ng-data
+  speed: 1
+  defaultSpeakerId: 0
+  numThreads: 2
+  restrictToLanguage: 1
+  onlyLanguageCode: fr
+  verboseLogs: 1
+--- !u!4 &1604570897
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604570895}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1838.096, y: 965.7347, z: -7.124533}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1621241119
 GameObject:
   m_ObjectHideFlags: 0
@@ -2930,5 +2989,6 @@ SceneRoots:
   - {fileID: 738822637}
   - {fileID: 300236060}
   - {fileID: 1386347621}
+  - {fileID: 1604570897}
   - {fileID: 1390176415}
   - {fileID: 1499289361}
