@@ -107,7 +107,9 @@ namespace RPPG.TTS
                     return;
                 }
 
-                var loadOrtOptions = new LoadOnnxruntimeOptions(ortLibPath);
+                // Workaround binding VoicevoxCoreSharp 0.16.0 : null-terminate le path
+                // (la lib Rust attend une C-string, le binding ne l'ajoute pas).
+                var loadOrtOptions = new LoadOnnxruntimeOptions(ortLibPath + "\0");
                 if (Onnxruntime.LoadOnce(loadOrtOptions, out var onnxruntime) != ResultCode.RESULT_OK)
                 {
                     _initError = $"Onnxruntime.LoadOnce failed (lib={ortLibPath})";
