@@ -26,6 +26,15 @@ namespace RPPG.TTS.Editor
         {
             new ModelEntry
             {
+                key = "kokoro-en",
+                displayName = "🇬🇧 Kokoro (English — default, af_heart)",
+                zipUrl = $"{MODELS_BASE_URL}/kokoro-multi-lang-v1_0.zip",
+                approxSizeMb = 370, // fp32, fichiers chinois retirés
+                installPath = "Assets/StreamingAssets/models/kokoro-multi-lang-v1_0",
+                detectionFile = "model.onnx",
+            },
+            new ModelEntry
+            {
                 key = "piper-amy",
                 displayName = "🇬🇧 Piper Amy (English)",
                 zipUrl = $"{MODELS_BASE_URL}/piper-amy-medium.zip",

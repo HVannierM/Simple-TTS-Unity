@@ -1,8 +1,8 @@
 {
   "name": "com.rppg.tts",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "displayName": "Simple TTS Unity",
-  "description": "Plug-and-play neural Text-to-Speech for Unity. Ships with English (Piper Amy via Sherpa-onnx), French (Piper Siwis via Sherpa-onnx) and Japanese (Akagi Mitama via VOICEVOX). 100% offline, no internet calls. Cross-platform: Windows, macOS, Linux, Android, iOS. Architecture pluggable via ITTSProvider — easy to add more voices/languages.",
+  "description": "Plug-and-play neural Text-to-Speech for Unity. Ships with English (Kokoro via Sherpa-onnx, Piper Amy as fallback), French (Piper Siwis via Sherpa-onnx) and Japanese (Akagi Mitama via VOICEVOX). 100% offline, no internet calls. Cross-platform: Windows, macOS, Linux, Android, iOS. Architecture pluggable via ITTSProvider — easy to add more voices/languages.",
   "unity": "2022.3",
   "author": {
     "name": "Hugo Vannier (HVannierM)",
@@ -16,6 +16,7 @@
     "text-to-speech",
     "voicevox",
     "piper",
+    "kokoro",
     "sherpa-onnx",
     "offline",
     "japanese",
