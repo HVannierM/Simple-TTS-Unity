@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using SherpaOnnx;
@@ -68,15 +69,31 @@ namespace RPPG.TTS
 
         void Start()
         {
-            Task.Run(InitEngine);
+            StartCoroutine(InitRoutine());
         }
 
-        void InitEngine()
+        IEnumerator InitRoutine()
+        {
+            // Android : copie/extrait le modèle de StreamingAssets (jar) vers persistentDataPath.
+            // Autres plateformes : no-op, StreamingAssets utilisé directement.
+            string relDir = "models/" + modelFolderName;
+            bool installed = false;
+            yield return ModelInstaller.EnsureInstalled(relDir, modelFileName, ok => installed = ok);
+            if (!installed)
+            {
+                _initError = $"Installation du modèle échouée ({relDir})";
+                _initFailed = true;
+                Debug.LogError($"[KokoroOnyx] {_initError}");
+                yield break;
+            }
+            string root = ModelInstaller.ResolveRoot(relDir);
+            Task.Run(() => InitEngine(root));
+        }
+
+        void InitEngine(string root)
         {
             try
             {
-                string root = Path.Combine(Application.streamingAssetsPath, "models", modelFolderName);
-
                 string modelPath = Path.Combine(root, modelFileName);
                 string voicesPath = Path.Combine(root, voicesFileName);
                 string tokensPath = Path.Combine(root, tokensFileName);

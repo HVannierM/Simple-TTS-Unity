@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -31,6 +32,11 @@ namespace RPPG.TTS
         [Tooltip("Style ID de la voix à utiliser. Akagi Mitama Normal = 122.")]
         public uint defaultStyleId = 0;
 
+        [Header("Synthèse")]
+        [Range(0.5f, 2f)]
+        [Tooltip("Vitesse de parole (1 = normal, >1 plus rapide). VOICEVOX sonne lent par défaut.")]
+        public float speed = 1.2f;
+
         [Header("Filtre langue (pour dispatcher multi-TTS)")]
         public bool restrictToLanguage = false;
 
@@ -58,14 +64,36 @@ namespace RPPG.TTS
 
         void Start()
         {
-            Task.Run(InitEngine);
+            StartCoroutine(InitRoutine());
         }
 
-        void InitEngine()
+        IEnumerator InitRoutine()
+        {
+            // Android : copie/extrait voicevox_core (dict + .vvm) de StreamingAssets vers persistentDataPath.
+            // Autres plateformes : no-op, StreamingAssets utilisé directement.
+            const string relDir = "voicevox_core";
+            string detection = (specificVvmFiles != null && specificVvmFiles.Length > 0)
+                ? vvmsFolder + "/" + Path.GetFileName(specificVvmFiles[0])
+                : "dict/" + openJtalkDictName + "/sys.dic";
+
+            bool installed = false;
+            yield return ModelInstaller.EnsureInstalled(relDir, detection, ok => installed = ok);
+            if (!installed)
+            {
+                _initError = $"Installation voicevox_core échouée ({relDir})";
+                _initFailed = true;
+                Debug.LogError($"[Voicevox] {_initError}");
+                yield break;
+            }
+
+            string root = ModelInstaller.ResolveRoot(relDir);
+            Task.Run(() => InitEngine(root));
+        }
+
+        void InitEngine(string root)
         {
             try
             {
-                string root = Path.Combine(Application.streamingAssetsPath, "voicevox_core");
                 string dictPath = Path.Combine(root, "dict", openJtalkDictName);
                 string vvmsPath = Path.Combine(root, vvmsFolder);
 
@@ -329,16 +357,24 @@ namespace RPPG.TTS
             {
                 await Task.Run(() =>
                 {
-                    var rc = _synthesizer.Tts(normalizedText, defaultStyleId, TtsOptions.Default(),
+                    // 1) AudioQuery (texte null-terminé — workaround binding)
+                    var rcq = _synthesizer.CreateAudioQuery(normalizedText, defaultStyleId, out var aqJson);
+                    if (rcq != ResultCode.RESULT_OK || string.IsNullOrEmpty(aqJson))
+                    {
+                        Debug.LogError($"[Voicevox] CreateAudioQuery() returned {rcq} (styleId={defaultStyleId})");
+                        return;
+                    }
+
+                    // 2) Régler la vitesse (speedScale) dans le JSON, puis null-terminer pour Synthesis
+                    string queryJson = ApplySpeed(aqJson, speed) + "\0";
+
+                    // 3) Synthèse
+                    var rc = _synthesizer.Synthesis(queryJson, defaultStyleId, SynthesisOptions.Default(),
                         out var outputWavSize, out var outputWav);
                     if (rc == ResultCode.RESULT_OK)
-                    {
                         wavBytes = outputWav;
-                    }
                     else
-                    {
-                        Debug.LogError($"[Voicevox] Tts() returned {rc} (text=\"{normalizedText}\", styleId={defaultStyleId})");
-                    }
+                        Debug.LogError($"[Voicevox] Synthesis() returned {rc} (styleId={defaultStyleId})");
                 });
             }
             catch (Exception e)
@@ -359,6 +395,14 @@ namespace RPPG.TTS
                 Debug.Log($"[Voicevox] Généré {clip?.length:F2}s en {sw.ElapsedMilliseconds} ms");
 
             return clip;
+        }
+
+        // Règle le champ speedScale dans le JSON de l'AudioQuery (VOICEVOX).
+        static string ApplySpeed(string audioQueryJson, float speed)
+        {
+            string val = speed.ToString("0.###", System.Globalization.CultureInfo.InvariantCulture);
+            return System.Text.RegularExpressions.Regex.Replace(
+                audioQueryJson, "\"speedScale\"\\s*:\\s*-?[0-9.]+", "\"speedScale\":" + val);
         }
 
         void OnDestroy()
